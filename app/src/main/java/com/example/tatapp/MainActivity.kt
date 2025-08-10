@@ -11,6 +11,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.example.tatapp.ui.screens.carrito.Carrito
+import com.example.tatapp.ui.screens.formRegistro.FormRegistro
+import com.example.tatapp.ui.screens.home.Home
 import com.example.tatapp.ui.theme.TatappTheme
 
 class MainActivity : ComponentActivity() {
@@ -19,29 +25,44 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             TatappTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+                val navController = rememberNavController()
+                //Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                NavHost(
+                    navController = navController,
+                    startDestination = "registro"
+                ) {
+                    composable("registro") {
+                        FormRegistro(navController)
+                    }
+
+                    composable("home") {
+                        Home(
+                            //name = "Android",
+                            //modifier = Modifier.padding(paddingValues),
+                            navController = navController
+                        )
+                    }
+
+                    composable("carrito") {
+                        Carrito(navController)
+                    }
+
+
                 }
+
+
+
             }
         }
     }
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
+
 
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
     TatappTheme {
-        Greeting("Android")
+
     }
 }
