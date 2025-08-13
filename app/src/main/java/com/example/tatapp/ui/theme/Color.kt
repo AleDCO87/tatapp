@@ -16,7 +16,7 @@ val LightColorScheme = lightColorScheme(
     onError = Color(0xFFFFFFFF)
 )
 
-val DarkColorScheme = darkColorScheme(
+/*val DarkColorScheme = darkColorScheme(
     background = Color(0xFF121317),
     primary = Color(0xFFAAC7FF),
     onPrimary = Color(0xFF002F64),
@@ -26,4 +26,4 @@ val DarkColorScheme = darkColorScheme(
     onTertiary = Color(0xFF4D1A55),
     error = Color(0xFFFFB4AB),
     onError = Color(0xFF690005)
-)
+)*/

@@ -29,7 +29,7 @@ class MainActivity : ComponentActivity() {
                 //Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                 NavHost(
                     navController = navController,
-                    startDestination = "registro"
+                    startDestination = "home"
                 ) {
                     composable("registro") {
                         FormRegistro(navController)
