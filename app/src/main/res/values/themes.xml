@@ -2,4 +2,22 @@
 <resources>
 
     <style name="Theme.Tatapp" parent="android:Theme.Material.Light.NoActionBar" />
+
+    <!-- Tema de SplashScreen -->
+    <style name="Theme.Tatapp.Splash" parent="Theme.SplashScreen">
+        <!-- Fondo del splash -->
+        <item name="windowSplashScreenBackground">@color/white</item>
+
+        <!-- Icono o logo central -->
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher_foreground</item>
+
+        <!-- Duración animación (en ms) -->
+        <item name="windowSplashScreenAnimationDuration">300</item>
+
+        <!-- Tema que se aplicará después del splash -->
+        <item name="postSplashScreenTheme">@style/Theme.Tatapp</item>
+    </style>
+
+
+
 </resources>
