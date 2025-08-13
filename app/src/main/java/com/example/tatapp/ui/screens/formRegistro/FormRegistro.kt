@@ -27,9 +27,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 
 @Composable
 fun FormRegistro( navController: NavController) {
@@ -48,7 +50,7 @@ fun FormRegistro( navController: NavController) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Text(text = "Formulario de Registro", style = MaterialTheme.typography.titleMedium)
+        Text(text = "Formulario de Registro", style = MaterialTheme.typography.displayMedium)
         Spacer(modifier = Modifier.height(16.dp))
 
         TextField(
