@@ -7,9 +7,10 @@ import androidx.activity.enableEdgeToEdge
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.tatapp.ui.screens.carrito.Carrito
+import com.example.tatapp.ui.screens.carrito.CarritoScreen
 import com.example.tatapp.ui.screens.formRegistro.FormRegistro
 import com.example.tatapp.ui.screens.home.Home
+import com.example.tatapp.ui.screens.productos.ProductosScreen
 import com.example.tatapp.ui.theme.TatappTheme
 
 class MainActivity : ComponentActivity() {
@@ -29,8 +30,11 @@ class MainActivity : ComponentActivity() {
                     composable("home") {
                         Home(navController = navController)
                     }
+                    composable("productos") {
+                        ProductosScreen(navController)
+                    }
                     composable("carrito") {
-                        Carrito(navController)
+                        CarritoScreen(navController)
                     }
                 }
             }
