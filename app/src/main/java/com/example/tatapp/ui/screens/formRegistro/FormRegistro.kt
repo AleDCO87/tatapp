@@ -1,16 +1,23 @@
 package com.example.tatapp.ui.screens.formRegistro
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.*
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.tatapp.ui.components.PasswordField
 import com.example.tatapp.ui.components.esRutValidoConFuncion
 import com.example.tatapp.ui.components.formatearRUT
 import kotlinx.coroutines.delay
@@ -167,23 +174,21 @@ fun FormRegistro(
             Spacer(Modifier.height(8.dp))
 
             // Contraseña
-            OutlinedTextField(
+            PasswordField(
                 value = vm.password.value,
-                onValueChange = { vm.password.value = it },
-                label = { Text("Contraseña") },
-                visualTransformation = PasswordVisualTransformation(),
+                onValueChange = {
+                    vm.password.value = it
+                    vm.errorPassword.value = null
+                },
+                errorText = vm.errorPassword.value,
+                confirmValue = vm.confirmarPassword.value,
+                minLength = 6,
                 modifier = Modifier.fillMaxWidth(),
-                singleLine = true
+                label = "Contraseña"
             )
-            if (vm.errorPassword.value != null) {
-                Text(
-                    text = vm.errorPassword.value!!,
-                    color = MaterialTheme.colorScheme.error,
-                    style = MaterialTheme.typography.labelSmall
-                )
-            }
 
             Spacer(Modifier.height(8.dp))
+
 
             // Confirmar contraseña
             OutlinedTextField(
