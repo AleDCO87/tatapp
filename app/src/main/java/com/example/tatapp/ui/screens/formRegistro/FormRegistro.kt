@@ -14,29 +14,40 @@ import androidx.navigation.NavController
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+// Pequeña ayuda para saber si el input YA está “completo” (tiene número + DV)
+private fun rutCompleto(input: String): Boolean {
+    val clean = input.replace(".", "").replace(" ", "").lowercase()
+    val withDash = if ("-" in clean) clean else {
+        if (clean.length < 2) return false
+        clean.dropLast(1) + "-" + clean.takeLast(1)
+    }
+    val parts = withDash.split("-")
+    if (parts.size != 2) return false
+    val numero = parts[0]
+    val dv = parts[1]
+    // RUTs reales suelen tener 7 u 8 dígitos antes del DV
+    return numero.length in 7..8 && dv.length == 1 && numero.all { it.isDigit() }
+}
+
 @Composable
 fun FormRegistro(
     navController: NavController,
     vm: FormRegistroViewModel = viewModel()
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
-    val scope = rememberCoroutineScope()
-    val registroExitoso = vm.registroExitoso.value
 
+    // Mensajes de advertencia de campos generales
     LaunchedEffect(vm.mensaje.value) {
-        vm.mensaje.value?.let {
-            scope.launch {
-                snackbarHostState.showSnackbar(it)
-            }
-            vm.mensaje.value = null // limpia el mensaje
+        vm.mensaje.value?.let { msg ->
+            snackbarHostState.showSnackbar(msg)
+            vm.mensaje.value = null
         }
     }
 
-    // Mostrar Snackbar cuando el ViewModel emite un mensaje
-    LaunchedEffect(registroExitoso) {
+    // Confirmación y navegación de registro exitoso
+    LaunchedEffect(vm.registroExitoso.value) {
         if (vm.registroExitoso.value) {
-            scope.launch { snackbarHostState.showSnackbar("Registro Completado ✅")
-            }
+            snackbarHostState.showSnackbar("Registro Completado ✅")
             delay(1000)
             navController.navigate("categorias"){
                 popUpTo("registro"){
@@ -104,25 +115,29 @@ fun FormRegistro(
             // RUT
             OutlinedTextField(
                 value = vm.rut.value,
-                onValueChange = {
-                    vm.rut.value = it
-                    vm.errorRut.value = null
-                    val sinPuntos = it.replace(".", "").replace(" ", "")
-                    if (sinPuntos.length >= 3 && esRutValidoConFuncion(it)){
-                        vm.rut.value = formatearRUT(it)
+                onValueChange = { input ->
+                    vm.rut.value = input
+                    if (rutCompleto(input)){
+                        if (esRutValidoConFuncion(input)){
+                            vm.errorRut.value = null
+                            vm.rut.value = formatearRUT(input)
+                        } else {
+                            vm.errorRut.value = "El rut es inválido"
+                        }
+                    } else {
+                        vm.errorRut.value = null
                     } },
                 label = { Text("RUT (12.345.678-9)") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
                 modifier = Modifier.fillMaxWidth(),
-                singleLine = true
+                singleLine = true,
+                isError = vm.errorRut.value != null,
+                supportingText = {
+                    vm.errorRut.value?.let{ msg ->
+                        Text(text = msg, color = MaterialTheme.colorScheme.error)
+                    }
+                }
             )
-            if (vm.errorRut.value != null) {
-                Text(
-                    text = vm.errorRut.value!!,
-                    color = MaterialTheme.colorScheme.error,
-                    style = MaterialTheme.typography.labelSmall
-                )
-            }
 
             Spacer(Modifier.height(8.dp))
 
