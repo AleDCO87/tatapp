@@ -6,12 +6,12 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
@@ -21,13 +21,29 @@ fun FormRegistro(
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
-    val mensaje = vm.mensaje.value
+    val registroExitoso = vm.registroExitoso.value
+
+    LaunchedEffect(vm.mensaje.value) {
+        vm.mensaje.value?.let {
+            scope.launch {
+                snackbarHostState.showSnackbar(it)
+            }
+            vm.mensaje.value = null // limpia el mensaje
+        }
+    }
 
     // Mostrar Snackbar cuando el ViewModel emite un mensaje
-    LaunchedEffect(mensaje) {
-        mensaje?.let {
-            scope.launch { snackbarHostState.showSnackbar(it) }
-            vm.mensaje.value = null // limpiar para no repetir
+    LaunchedEffect(registroExitoso) {
+        if (registroExitoso) {
+            scope.launch { snackbarHostState.showSnackbar("Registro Completado ✅")
+            }
+            delay(1000)
+            navController.navigate("productos"){
+                popUpTo("registro"){
+                    inclusive = true
+                }
+                vm.registroExitoso.value = false
+            }
         }
     }
 
@@ -57,6 +73,13 @@ fun FormRegistro(
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true
             )
+            if (vm.errorNombre.value != null) {
+                Text(
+                    text = vm.errorNombre.value!!,
+                    color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.labelSmall
+                )
+            }
 
             Spacer(Modifier.height(8.dp))
 
@@ -68,6 +91,13 @@ fun FormRegistro(
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true
             )
+            if (vm.errorApellido.value != null) {
+                Text(
+                    text = vm.errorApellido.value!!,
+                    color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.labelSmall
+                )
+            }
 
             Spacer(Modifier.height(8.dp))
 
@@ -80,6 +110,13 @@ fun FormRegistro(
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true
             )
+            if (vm.errorRut.value != null) {
+                Text(
+                    text = vm.errorRut.value!!,
+                    color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.labelSmall
+                )
+            }
 
             Spacer(Modifier.height(8.dp))
 
@@ -87,11 +124,18 @@ fun FormRegistro(
             OutlinedTextField(
                 value = vm.correo.value,
                 onValueChange = { vm.correo.value = it },
-                label = { Text("Correo") },
+                label = { Text("ejemplo@dominio.com") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true
             )
+            if (vm.errorCorreo.value != null) {
+                Text(
+                    text = vm.errorCorreo.value!!,
+                    color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.labelSmall
+                )
+            }
 
             Spacer(Modifier.height(8.dp))
 
@@ -99,11 +143,18 @@ fun FormRegistro(
             OutlinedTextField(
                 value = vm.telefono.value,
                 onValueChange = { vm.telefono.value = it },
-                label = { Text("Teléfono") },
+                label = { Text("+56 9 1234 5678") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true
             )
+            if (vm.errorTelefono.value != null) {
+                Text(
+                    text = vm.errorTelefono.value!!,
+                    color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.labelSmall
+                )
+            }
 
             Spacer(Modifier.height(8.dp))
 
@@ -116,6 +167,13 @@ fun FormRegistro(
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true
             )
+            if (vm.errorPassword.value != null) {
+                Text(
+                    text = vm.errorPassword.value!!,
+                    color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.labelSmall
+                )
+            }
 
             Spacer(Modifier.height(8.dp))
 
@@ -128,6 +186,13 @@ fun FormRegistro(
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true
             )
+            if (vm.errorConfirmPassword.value != null) {
+                Text(
+                    text = vm.errorConfirmPassword.value!!,
+                    color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.labelSmall
+                )
+            }
 
             Spacer(Modifier.height(16.dp))
 
@@ -135,9 +200,6 @@ fun FormRegistro(
             Button(
                 onClick = {
                     vm.validarFormulario()
-                    // Si quisieras navegar cuando todo está OK,
-                    // agrega en tu ViewModel un flag/resultado de éxito y navega aquí.
-                    // navController.navigate("productList")
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -146,7 +208,6 @@ fun FormRegistro(
 
             Spacer(Modifier.height(8.dp))
 
-            // Volver atrás
             TextButton(onClick = { navController.popBackStack() }) {
                 Text("Cancelar")
             }
