@@ -3,15 +3,14 @@ package com.example.tatapp.ui.screens.formRegistro
 import androidx.lifecycle.ViewModel
 import androidx.compose.runtime.mutableStateOf
 
-//Función que formatea Rut a 12.2345.678-5
+/*//Función que formatea Rut a 12.2345.678-5
 fun formatearRUT(input: String): String {
-    val rutLimpio = input.replace(".","").replace(" ","").lowercase()
-    if (rutLimpio.length < 2) return input
-    val cuerpo = rutLimpio.dropLast(1)
-    val dv = rutLimpio.last()
-    val conPuntos = cuerpo.reversed().chunked(3).joinToString(".").reversed()
+    val parsed = parseRut(input) ?: return input
+    val (numero,dv) = parsed
+    val conPuntos = numero.reversed().chunked(3).joinToString(".").reversed()
     return "$conPuntos-$dv".uppercase()
 }
+*/
 class FormRegistroViewModel : ViewModel() {
     // ----> Campos del formulario <----
     val nombre = mutableStateOf("")

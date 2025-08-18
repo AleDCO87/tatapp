@@ -38,7 +38,7 @@ fun FormRegistro(
             scope.launch { snackbarHostState.showSnackbar("Registro Completado ✅")
             }
             delay(1000)
-            navController.navigate("productos"){
+            navController.navigate("categorias"){
                 popUpTo("registro"){
                     inclusive = true
                 }
