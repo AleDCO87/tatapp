@@ -34,7 +34,7 @@ fun FormRegistro(
 
     // Mostrar Snackbar cuando el ViewModel emite un mensaje
     LaunchedEffect(registroExitoso) {
-        if (registroExitoso) {
+        if (vm.registroExitoso.value) {
             scope.launch { snackbarHostState.showSnackbar("Registro Completado ✅")
             }
             delay(1000)
@@ -104,8 +104,14 @@ fun FormRegistro(
             // RUT
             OutlinedTextField(
                 value = vm.rut.value,
-                onValueChange = { vm.rut.value = it },
-                label = { Text("RUT (12345678-9)") },
+                onValueChange = {
+                    vm.rut.value = it
+                    vm.errorRut.value = null
+                    val sinPuntos = it.replace(".", "").replace(" ", "")
+                    if (sinPuntos.length >= 3 && esRutValidoConFuncion(it)){
+                        vm.rut.value = formatearRUT(it)
+                    } },
+                label = { Text("RUT (12.345.678-9)") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true
