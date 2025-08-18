@@ -14,21 +14,7 @@ import androidx.navigation.NavController
 import com.example.tatapp.ui.components.esRutValidoConFuncion
 import com.example.tatapp.ui.components.formatearRUT
 import kotlinx.coroutines.delay
-
-// Pequeña ayuda para saber si el input YA está “completo” (tiene número + DV)
-private fun rutCompleto(input: String): Boolean {
-    val clean = input.replace(".", "").replace(" ", "").lowercase()
-    val withDash = if ("-" in clean) clean else {
-        if (clean.length < 2) return false
-        clean.dropLast(1) + "-" + clean.takeLast(1)
-    }
-    val parts = withDash.split("-")
-    if (parts.size != 2) return false
-    val numero = parts[0]
-    val dv = parts[1]
-    // RUTs reales suelen tener 7 u 8 dígitos antes del DV
-    return numero.length in 7..8 && dv.length == 1 && numero.all { it.isDigit() }
-}
+import com.example.tatapp.ui.components.rutCompleto
 
 @Composable
 fun FormRegistro(
