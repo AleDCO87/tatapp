@@ -11,8 +11,9 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.tatapp.ui.components.esRutValidoConFuncion
+import com.example.tatapp.ui.components.formatearRUT
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 // Pequeña ayuda para saber si el input YA está “completo” (tiene número + DV)
 private fun rutCompleto(input: String): Boolean {
