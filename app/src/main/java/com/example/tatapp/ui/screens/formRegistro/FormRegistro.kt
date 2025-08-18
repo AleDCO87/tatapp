@@ -1,125 +1,155 @@
 package com.example.tatapp.ui.screens.formRegistro
 
-import ads_mobile_sdk.h5
-import android.os.Bundle
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Button
-import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.rememberDrawerState
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
+import kotlinx.coroutines.launch
 
 @Composable
-fun FormRegistro( navController: NavController) {
-    var nombre by remember { mutableStateOf("") }
-    var apellido by remember { mutableStateOf("") }
-    var rut by remember { mutableStateOf("") }
-    var email by remember { mutableStateOf("") }
-    var telefono by remember { mutableStateOf("") }
-    var contraseña by remember { mutableStateOf("") }
-    var confirmarContraseña by remember { mutableStateOf("") }
+fun FormRegistro(
+    navController: NavController,
+    vm: FormRegistroViewModel = viewModel()
+) {
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
+    val mensaje = vm.mensaje.value
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text(text = "Formulario de Registro", style = MaterialTheme.typography.displayMedium)
-        Spacer(modifier = Modifier.height(16.dp))
+    // Mostrar Snackbar cuando el ViewModel emite un mensaje
+    LaunchedEffect(mensaje) {
+        mensaje?.let {
+            scope.launch { snackbarHostState.showSnackbar(it) }
+            vm.mensaje.value = null // limpiar para no repetir
+        }
+    }
 
-        TextField(
-            value = nombre,
-            onValueChange = { nombre = it },
-            label = { Text("Nombre") },
-            modifier = Modifier.fillMaxWidth()
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-
-        TextField(
-            value = apellido,
-            onValueChange = { apellido = it },
-            label = { Text("Apellido") },
-            modifier = Modifier.fillMaxWidth()
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-
-        TextField(
-            value = rut,
-            onValueChange = { rut = it },
-            label = { Text("RUT") },
-            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
-            modifier = Modifier.fillMaxWidth()
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-
-        TextField(
-            value = email,
-            onValueChange = { email = it },
-            label = { Text("Correo electrónico") },
-            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Email),
-            modifier = Modifier.fillMaxWidth()
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-
-        TextField(
-            value = telefono,
-            onValueChange = { telefono = it },
-            label = { Text("Teléfono") },
-            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Phone),
-            modifier = Modifier.fillMaxWidth()
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-
-        TextField(
-            value = contraseña,
-            onValueChange = { contraseña = it },
-            label = { Text("Contraseña") },
-            modifier = Modifier.fillMaxWidth()
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-
-        TextField(
-            value = confirmarContraseña,
-            onValueChange = { confirmarContraseña = it },
-            label = { Text("Confirmar Contraseña") },
-            modifier = Modifier.fillMaxWidth()
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Button(
-            onClick = {
-                // Validar formulario y navegar a la siguiente pantalla
-                navController.navigate("productList")
-            },
-            modifier = Modifier.fillMaxWidth()
+    Scaffold(
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
+    ) { padding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = "Registrarse")
+
+            Text(
+                text = "Crear cuenta",
+                style = MaterialTheme.typography.displayMedium
+            )
+
+            Spacer(Modifier.height(16.dp))
+
+            // Nombre
+            OutlinedTextField(
+                value = vm.nombre.value,
+                onValueChange = { vm.nombre.value = it },
+                label = { Text("Nombre") },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true
+            )
+
+            Spacer(Modifier.height(8.dp))
+
+            // Apellido
+            OutlinedTextField(
+                value = vm.apellido.value,
+                onValueChange = { vm.apellido.value = it },
+                label = { Text("Apellido") },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true
+            )
+
+            Spacer(Modifier.height(8.dp))
+
+            // RUT
+            OutlinedTextField(
+                value = vm.rut.value,
+                onValueChange = { vm.rut.value = it },
+                label = { Text("RUT (12345678-9)") },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true
+            )
+
+            Spacer(Modifier.height(8.dp))
+
+            // Correo
+            OutlinedTextField(
+                value = vm.correo.value,
+                onValueChange = { vm.correo.value = it },
+                label = { Text("Correo") },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true
+            )
+
+            Spacer(Modifier.height(8.dp))
+
+            // Teléfono
+            OutlinedTextField(
+                value = vm.telefono.value,
+                onValueChange = { vm.telefono.value = it },
+                label = { Text("Teléfono") },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true
+            )
+
+            Spacer(Modifier.height(8.dp))
+
+            // Contraseña
+            OutlinedTextField(
+                value = vm.password.value,
+                onValueChange = { vm.password.value = it },
+                label = { Text("Contraseña") },
+                visualTransformation = PasswordVisualTransformation(),
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true
+            )
+
+            Spacer(Modifier.height(8.dp))
+
+            // Confirmar contraseña
+            OutlinedTextField(
+                value = vm.confirmarPassword.value,
+                onValueChange = { vm.confirmarPassword.value = it },
+                label = { Text("Confirmar contraseña") },
+                visualTransformation = PasswordVisualTransformation(),
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true
+            )
+
+            Spacer(Modifier.height(16.dp))
+
+            // Botón Registrar
+            Button(
+                onClick = {
+                    vm.validarFormulario()
+                    // Si quisieras navegar cuando todo está OK,
+                    // agrega en tu ViewModel un flag/resultado de éxito y navega aquí.
+                    // navController.navigate("productList")
+                },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Registrarse")
+            }
+
+            Spacer(Modifier.height(8.dp))
+
+            // Volver atrás
+            TextButton(onClick = { navController.popBackStack() }) {
+                Text("Cancelar")
+            }
         }
     }
 }
