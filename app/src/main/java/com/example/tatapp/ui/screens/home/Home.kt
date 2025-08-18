@@ -27,7 +27,7 @@ fun Home( navController: NavHostController) {
         Text(text = "Bienvenido a Tatapp", style = MaterialTheme.typography.displayMedium)
         Spacer(modifier = Modifier.height(20.dp))
 
-        Button(onClick = { navController.navigate("productos") }) {
+        Button(onClick = { navController.navigate("categorias") }) {
             Text(text = "Ya tengo cuenta")
         }
         Spacer(modifier = Modifier.height(20.dp))

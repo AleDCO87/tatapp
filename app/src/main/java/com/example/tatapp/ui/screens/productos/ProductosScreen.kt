@@ -10,7 +10,9 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.outlined.AccountCircle
+import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.material.icons.rounded.ShoppingCart
 import androidx.compose.runtime.*
@@ -37,12 +39,12 @@ fun ProductosScreen(navController: NavHostController, viewModel: ProductosViewMo
         topBar = {
             CenterAlignedTopAppBar(
                 title = { Text("Productos", fontSize = 30.sp) },
-                /*
+
                 navigationIcon = {
-                    IconButton(onClick = { /* Abrir menú */ }) {
-                        Icon(Icons.Rounded.Menu, contentDescription = "Menú")
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = "Volver")
                     }
-                },*/
+                },
                 /*
                 actions = {
                     IconButton(onClick = { /* Ir al perfil */ }) {

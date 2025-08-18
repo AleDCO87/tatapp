@@ -11,6 +11,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.tatapp.ui.screens.carrito.CarritoScreen
 import com.example.tatapp.ui.screens.carrito.CarritoViewModel
+import com.example.tatapp.ui.screens.categorias.CategoriasScreen
 import com.example.tatapp.ui.screens.formRegistro.FormRegistro
 import com.example.tatapp.ui.screens.home.Home
 import com.example.tatapp.ui.screens.productos.ProductosScreen
@@ -46,7 +47,12 @@ class MainActivity : ComponentActivity() {
                         Home(navController = navController)
                     }
 
+                    composable("categorias") {
+                        CategoriasScreen(navController = navController)
+                    }
+
                     composable("productos") {
+                            backStackEntry ->
                         ProductosScreen(navController = navController, viewModel = productosViewModel)
                     }
 
