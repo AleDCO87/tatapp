@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -191,13 +192,19 @@ fun FormRegistro(
 
 
             // Confirmar contraseña
+            var confirmReveal by remember { mutableStateOf(false) }
             OutlinedTextField(
                 value = vm.confirmarPassword.value,
                 onValueChange = { vm.confirmarPassword.value = it },
                 label = { Text("Confirmar contraseña") },
-                visualTransformation = PasswordVisualTransformation(),
+                visualTransformation = if (confirmReveal) VisualTransformation.None else PasswordVisualTransformation(),
                 modifier = Modifier.fillMaxWidth(),
-                singleLine = true
+                singleLine = true,
+                trailingIcon = {
+                    TextButton(onClick = { confirmReveal = !confirmReveal }) {
+                        Text(if (confirmReveal) "Ocultar" else "Mostrar")
+                    }
+                }
             )
             if (vm.errorConfirmPassword.value != null) {
                 Text(

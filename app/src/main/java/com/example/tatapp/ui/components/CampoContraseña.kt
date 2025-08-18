@@ -71,12 +71,13 @@ fun PasswordField(
     var reveal by remember { mutableStateOf(false) }
 
     val showRules = focused || value.isNotEmpty()
-    val neutral = value.isEmpty()
 
+    val neutral = value.isEmpty()
     val lenOk = value.length >= minLength
     val hasUpper = value.any { it.isUpperCase() }
     val hasDigit = value.any { it.isDigit() }
     val hasSpecial = value.any { !it.isLetterOrDigit() }
+    val matchOk = confirmValue?.let{ it.isNotEmpty() && it == value } ?: false
 
     val hasError = errorText != null
 
@@ -130,6 +131,13 @@ fun PasswordField(
                                 satisfied = hasSpecial,
                                 neutral = neutral
                             )
+                            if (confirmValue != null) {
+                                RequirementRow(
+                                    text = "Las contraseñas deben coincidir",
+                                    satisfied = matchOk,
+                                    neutral = confirmValue.isEmpty()
+                                )
+                            }
                         }
                     }
                 }
