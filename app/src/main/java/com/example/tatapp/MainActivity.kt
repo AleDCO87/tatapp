@@ -22,7 +22,7 @@ import com.example.tatapp.ui.theme.TatappTheme
 class MainActivity : ComponentActivity() {
 
     private val carritoViewModel: CarritoViewModel by viewModels()
-    private val productosViewModel: ProductosViewModel by viewModels {
+    private val productosViewModel: ProductosViewModel by viewModels {  //necesita una dependencia para funcionar
         ProductosViewModelFactory(carritoViewModel)    //esto porque productos usa la lista global mutable del carrito
     }
 

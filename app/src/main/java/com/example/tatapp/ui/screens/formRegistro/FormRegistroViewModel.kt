@@ -1,83 +1,104 @@
 package com.example.tatapp.ui.screens.formRegistro
 
-import androidx.lifecycle.ViewModel
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.lifecycle.ViewModel
 import com.example.tatapp.ui.components.esRutValidoConFuncion
 import com.example.tatapp.ui.components.formatearRUT
 
 class FormRegistroViewModel : ViewModel() {
+
     // ----> Campos del formulario <----
-    val nombre = mutableStateOf("")
-    val apellido = mutableStateOf("")
-    val rut = mutableStateOf("")
-    val correo = mutableStateOf("")
-    val telefono = mutableStateOf("")
-    val password = mutableStateOf("")
-    val confirmarPassword = mutableStateOf("")
-    val mensaje = mutableStateOf<String?>(null)
+    var regNombre by mutableStateOf("")
+    fun onRegNombreChange(value: String) { regNombre = value }
+
+    var regApellido by mutableStateOf("")
+    fun onRegApellidoChange(value: String) { regApellido = value }
+
+    var regRut by mutableStateOf("")
+    fun onRegRutChange(value: String) { regRut = value }
+
+    var regCorreo by mutableStateOf("")
+    fun onRegCorreoChange(value: String) { regCorreo = value }
+
+    var regTelefono by mutableStateOf("")
+    fun onRegTelefonoChange(value: String) { regTelefono = value }
+
+    var regPassword by mutableStateOf("")
+    fun onRegPasswordChange(value: String) { regPassword = value }
+
+    var regConfirmarPassword by mutableStateOf("")
+    fun onRegConfirmarPasswordChange(value: String) { regConfirmarPassword = value }
+
+
+    // Mensaje general
+    var mensaje by mutableStateOf<String?>(null)
+
 
     // ----> Errores asociados a los campos <----
-    var errorNombre = mutableStateOf<String?>(null)
-    var errorApellido = mutableStateOf<String?>(null)
-    var errorRut = mutableStateOf<String?>(null)
-    var errorCorreo = mutableStateOf<String?>(null)
-    var errorTelefono = mutableStateOf<String?>(null)
-    var errorPassword = mutableStateOf<String?>(null)
-    var errorConfirmPassword = mutableStateOf<String?>(null)
+    var errorNombre by mutableStateOf<String?>(null)
+    var errorApellido by mutableStateOf<String?>(null)
+    var errorRut by mutableStateOf<String?>(null)
+    var errorCorreo by mutableStateOf<String?>(null)
+    var errorTelefono by mutableStateOf<String?>(null)
+    var errorPassword by mutableStateOf<String?>(null)
+    var errorConfirmPassword by mutableStateOf<String?>(null)
 
     // ----> Flag de registro exitoso <----
-    var registroExitoso = mutableStateOf(false)
+    var registroExitoso by mutableStateOf(false)
 
     fun validarFormulario() {
-        errorNombre.value = null
-        errorApellido.value = null
-        errorRut.value = null
-        errorCorreo.value = null
-        errorTelefono.value = null
-        errorPassword.value = null
-        errorConfirmPassword.value = null
+        // Reset errores
+        errorNombre = null
+        errorApellido = null
+        errorRut = null
+        errorCorreo = null
+        errorTelefono = null
+        errorPassword = null
+        errorConfirmPassword = null
 
         var valido = true
 
-        if (nombre.value.isBlank()){
-            errorNombre.value = "El nombre es obligatorio"
+        if (regNombre.isBlank()) {
+            errorNombre = "El nombre es obligatorio"
             valido = false
         }
 
-        if (apellido.value.isBlank()){
-            errorApellido.value = "El apellido es obligatorio"
+        if (regApellido.isBlank()) {
+            errorApellido = "El apellido es obligatorio"
             valido = false
         }
 
-        if (!esRutValidoConFuncion(rut.value)){
-            errorRut.value = "El rut es inválido"
+        if (!esRutValidoConFuncion(regRut)) {
+            errorRut = "El rut es inválido"
             valido = false
-        } else{
-            rut.value = formatearRUT(rut.value)
+        } else {
+            regRut = formatearRUT(regRut)
         }
 
-        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(correo.value).matches()){
-            errorCorreo.value = "El Correo es inválido"
-            valido = false
-        }
-
-        if (telefono.value.length < 8){
-            errorTelefono.value = "El telefono es incorrecto"
+        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(regCorreo).matches()) {
+            errorCorreo = "El correo es inválido"
             valido = false
         }
 
-        if (password.value.length < 6){
-            errorPassword.value = "La contraseña debe tener al menos 6 caracteres"
+        if (regTelefono.length < 8) {
+            errorTelefono = "El teléfono es incorrecto"
             valido = false
         }
 
-        if (password.value != confirmarPassword.value){
-            errorConfirmPassword.value = "Las contraseñas no coinciden"
+        if (regPassword.length < 6) {
+            errorPassword = "La contraseña debe tener al menos 6 caracteres"
             valido = false
         }
 
-        if (valido){
-            registroExitoso.value = true
+        if (regPassword != regConfirmarPassword) {
+            errorConfirmPassword = "Las contraseñas no coinciden"
+            valido = false
+        }
+
+        if (valido) {
+            registroExitoso = true
         }
     }
 }
