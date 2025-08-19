@@ -39,13 +39,14 @@ class MainActivity : ComponentActivity() {
 
                 NavHost(navController = navController, startDestination = "home") {
 
+                    composable("home") {
+                        Home(navController = navController)
+                    }
+
                     composable("registro") {
                         FormRegistro(navController)
                     }
 
-                    composable("home") {
-                        Home(navController = navController)
-                    }
 
                     composable("categorias") {
                         CategoriasScreen(navController = navController)

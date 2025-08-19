@@ -1,7 +1,9 @@
 package com.example.tatapp.ui.screens.carrito
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -9,9 +11,11 @@ import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.rounded.Close
+import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.material.icons.rounded.ShoppingCart
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -84,11 +88,24 @@ fun CarritoScreen(navController: NavHostController, viewModel: CarritoViewModel)
                     }
                 }
 
-                Text(
-                    "Total: \$${NumberFormat.getNumberInstance(Locale.forLanguageTag("es-CL")).format(viewModel.totalPrecio)}",
-                    fontSize = 22.sp,
-                    modifier = Modifier.padding(16.dp)
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Absolute.SpaceBetween,
+
+                ){
+                    Text(
+                        "Total: \$${NumberFormat.getNumberInstance(Locale.forLanguageTag("es-CL")).format(viewModel.totalPrecio)}",
+                        fontSize = 22.sp,
+                        modifier = Modifier.fillMaxWidth().weight(1f)
+                    )
+                    Button(
+                        onClick = { /* Acción para pagar */ },
+                        modifier = Modifier.fillMaxWidth().weight(1f).height(50.dp)
+                    ) { Text("Pagar", fontSize = 20.sp) }
+
+                }
+
+
             }
         }
     }
@@ -98,10 +115,10 @@ fun CarritoScreen(navController: NavHostController, viewModel: CarritoViewModel)
 fun CarritoItemRow(item: ClaseCarrito, viewModel: CarritoViewModel) {
     Card(
         modifier = Modifier
-            .fillMaxWidth()
-            .height(120.dp),
+            .fillMaxWidth(),
         shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFF1F8E9))
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFF1F8E9)),
+        border = BorderStroke(1.dp, Color.Gray)
     ) {
         Row(
             modifier = Modifier
@@ -112,32 +129,45 @@ fun CarritoItemRow(item: ClaseCarrito, viewModel: CarritoViewModel) {
             Image(
                 painter = painterResource(id = item.producto.imagenRes),
                 contentDescription = item.producto.nombre,
-                modifier = Modifier.size(64.dp)
+                modifier = Modifier.size(70.dp)
             )
 
             Column(
-                modifier = Modifier.weight(1f),
+                modifier = Modifier.weight(1f).padding(start = 8.dp),
                 verticalArrangement = Arrangement.Center
             ) {
-                Text(item.producto.nombre, fontSize = 20.sp, color = Color.Black)
+                Text(item.producto.nombre, fontSize = 22.sp, color = Color.Black)
                 Spacer(modifier = Modifier.height(4.dp))
-                Row {
-                    Button(onClick = { viewModel.disminuirCantidad(item) }, modifier = Modifier.size(32.dp)) { Text("-", fontSize = 20.sp) }
+                Row (verticalAlignment= Alignment.CenterVertically,) {
+                    FilledIconButton(
+                        onClick = { viewModel.disminuirCantidad(item) },
+                        modifier = Modifier.size(40.dp)
+                    ) { Text("-", fontSize = 20.sp) }
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("${item.cantidad}", fontSize = 18.sp)
+                    Text("${item.cantidad}", fontSize = 22.sp)
                     Spacer(modifier = Modifier.width(8.dp))
-                    Button(onClick = { viewModel.aumentarCantidad(item) }, modifier = Modifier.size(32.dp)) { Text("+", fontSize = 20.sp) }
+                    FilledIconButton(
+                        onClick = { viewModel.aumentarCantidad(item) },
+                        modifier = Modifier.size(40.dp)
+                    ) { Text("+", fontSize = 20.sp) }
                 }
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    "Subtotal: \$${"%,d".format(item.producto.precio * item.cantidad)}",
+                    "Subtotal: \$${NumberFormat.getNumberInstance(Locale.forLanguageTag("es-CL")).format(item.producto.precio * item.cantidad)}",
+                   // "Subtotal: \$${"%,d".format(item.producto.precio * item.cantidad)}",
                     fontSize = 18.sp,
                     color = Color.Black
                 )
             }
 
-            IconButton(onClick = { viewModel.eliminarProducto(item) }) {
-                Icon(Icons.Rounded.Close, contentDescription = "Eliminar producto")
+            FilledIconButton(
+                onClick = { viewModel.eliminarProducto(item) },
+                colors= IconButtonDefaults.filledIconButtonColors(
+                    containerColor = Color.Red,
+                    contentColor = Color.White
+                )
+            ) {
+                Icon(Icons.Rounded.Delete, contentDescription = "Eliminar producto")
             }
         }
     }
