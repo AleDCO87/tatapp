@@ -32,12 +32,12 @@ fun FormRegistro(
     val scrollState = rememberScrollState()
 
     // Mostrar mensajes generales
-    LaunchedEffect(vm.mensaje) {
+    /*LaunchedEffect(vm.mensaje) {
         vm.mensaje?.let { msg ->
             snackbarHostState.showSnackbar(msg)
             vm.mensaje = null
         }
-    }
+    }*/
 
     // Confirmación y navegación
     LaunchedEffect(vm.registroExitoso) {

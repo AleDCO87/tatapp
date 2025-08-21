@@ -33,10 +33,8 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             TatappTheme {
-
                 //toda la navegación
                 val navController = rememberNavController()
-
                 NavHost(navController = navController, startDestination = "home") {
 
                     composable("home") {
@@ -46,7 +44,6 @@ class MainActivity : ComponentActivity() {
                     composable("registro") {
                         FormRegistro(navController)
                     }
-
 
                     composable("categorias") {
                         CategoriasScreen(navController = navController)

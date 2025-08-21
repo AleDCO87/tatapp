@@ -33,7 +33,7 @@ class FormRegistroViewModel : ViewModel() {
 
 
     // Mensaje general
-    var mensaje by mutableStateOf<String?>(null)
+    //var mensaje by mutableStateOf<String?>(null)
 
 
     // ----> Errores asociados a los campos <----
