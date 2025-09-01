@@ -39,10 +39,7 @@ fun CarritoScreen(navController: NavHostController, viewModel: CarritoViewModel)
                     label = { Text("Productos", fontSize = 18.sp) },
                     selected = false,
                     onClick = {
-                        // Navegación dinámica a la última categoría/subcategoría
-                        val categoria = viewModel.ultimaCategoria ?: "defaultCategoria"
-                        val subcategoria = viewModel.ultimaSubcategoria ?: "defaultSubcategoria"
-                        navController.navigate("productos/$categoria/$subcategoria")
+                        navController.popBackStack()
                     }
                 )
 

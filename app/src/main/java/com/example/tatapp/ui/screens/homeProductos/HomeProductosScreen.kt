@@ -38,14 +38,15 @@ fun HomeProductosScreen(navController: NavHostController) {
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text("TatApp", fontWeight = FontWeight.Bold) },
+                title = { Text("TatApp", fontSize = 30.sp) },
                 navigationIcon = {
-                    IconButton(onClick = { /* Ir al perfil */ }) {
+                    IconButton(onClick = { navController.navigate("home") }) {
                         Icon(Icons.Default.AccountCircle, contentDescription = "Perfil")
                     }
                 },
                 actions = {
-                    IconButton(onClick = { /* Ir al carrito */ }) {
+                    IconButton(onClick = {
+                        navController.navigate("carrito")  }) {
                         Icon(Icons.Default.ShoppingCart, contentDescription = "Carrito")
                     }
                 },

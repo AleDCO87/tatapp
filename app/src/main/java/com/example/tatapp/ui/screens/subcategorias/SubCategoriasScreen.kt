@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -28,7 +30,12 @@ fun SubCategoriasScreen(
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text(categoria, fontWeight = FontWeight.Bold) }
+                title = { Text(categoria, fontSize = 30.sp) },
+                navigationIcon = {
+                    IconButton(onClick = { navController.navigate("homeProductosScreen") }) {
+                        Icon(Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = "Volver")
+                    }
+                }
             )
         }
     ) { paddingValues ->

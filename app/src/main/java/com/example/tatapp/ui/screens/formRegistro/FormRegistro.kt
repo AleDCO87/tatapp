@@ -44,7 +44,7 @@ fun FormRegistro(
         if (vm.registroExitoso) {
             snackbarHostState.showSnackbar("Registro Completado ✅")
             delay(800)
-            navController.navigate("categorias") {
+            navController.navigate("homeProductosScreen") {
                 popUpTo("registro") { inclusive = true }
             }
             vm.registroExitoso = false

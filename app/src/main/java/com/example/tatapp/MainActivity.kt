@@ -14,7 +14,6 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.tatapp.ui.screens.carrito.CarritoScreen
 import com.example.tatapp.ui.screens.carrito.CarritoViewModel
-import com.example.tatapp.ui.screens.categorias.CategoriasScreen
 import com.example.tatapp.ui.screens.formRegistro.FormRegistro
 import com.example.tatapp.ui.screens.home.Home
 import com.example.tatapp.ui.screens.homeProductos.HomeProductosScreen
@@ -37,15 +36,7 @@ class MainActivity : ComponentActivity() {
             TatappTheme {
                 //toda la navegación
                 val navController = rememberNavController()
-                NavHost(navController = navController, startDestination = "home") {
-
-                    composable("home") {
-                        Home(navController)
-                    }
-
-                    composable("registro") {
-                        FormRegistro(navController)
-                    }
+                NavHost(navController = navController, startDestination = "homeProductosScreen") {
 
                     composable("homeProductosScreen") {
                         HomeProductosScreen(navController = navController)
@@ -56,11 +47,11 @@ class MainActivity : ComponentActivity() {
                         arguments = listOf(navArgument("categoria") { type = NavType.StringType })
                     ) { backStackEntry ->
                         val categoria = backStackEntry.arguments?.getString("categoria") ?: ""
-                        SubCategoriasScreen(navController = navController, categoria = categoria)
-                    }
 
-                    composable("categorias") {
-                        CategoriasScreen(navController = navController)
+                        SubCategoriasScreen(
+                            navController = navController,
+                            categoria = categoria
+                        )
                     }
 
                     composable(
@@ -70,8 +61,8 @@ class MainActivity : ComponentActivity() {
                             navArgument("subcategoria") { type = NavType.StringType }
                         )
                     ) { backStackEntry ->
-                        val categoria = backStackEntry.arguments?.getString("categoria")
-                        val subcategoria = backStackEntry.arguments?.getString("subcategoria")
+                        val categoria = backStackEntry.arguments?.getString("categoria") ?: ""
+                        val subcategoria = backStackEntry.arguments?.getString("subcategoria") ?: ""
 
                         val viewModel: ProductosViewModel = viewModel(
                             factory = ProductosViewModelFactory(carritoViewModel, categoria, subcategoria)
@@ -79,13 +70,26 @@ class MainActivity : ComponentActivity() {
 
                         ProductosScreen(
                             navController = navController,
-                            viewModel = viewModel
+                            viewModel = viewModel,
+                            categoria = categoria,
+                            subcategoria = subcategoria
                         )
                     }
 
                     composable("carrito") {
                         CarritoScreen(navController = navController, viewModel = carritoViewModel)
                     }
+
+
+                    composable("home") {
+                        Home(navController)
+                    }
+
+                    composable("registro") {
+                        FormRegistro(navController)
+                    }
+
+
                 }
             }
         }

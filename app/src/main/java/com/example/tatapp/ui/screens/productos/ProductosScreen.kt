@@ -28,7 +28,9 @@ import java.util.Locale
 @Composable
 fun ProductosScreen(
     navController: NavHostController,
-    viewModel: ProductosViewModel
+    viewModel: ProductosViewModel,
+    categoria: String,
+    subcategoria: String
 ) {
     val productosFiltrados = viewModel.productosFiltrados
 
