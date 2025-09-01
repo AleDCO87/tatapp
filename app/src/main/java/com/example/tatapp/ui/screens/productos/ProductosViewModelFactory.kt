@@ -2,25 +2,17 @@ package com.example.tatapp.ui.screens.productos
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.tatapp.ui.screens.carrito.CarritoViewModel
+import com.example.tatapp.modelo.dao.CarritoDao
 
 class ProductosViewModelFactory(
-    private val carritoViewModel: CarritoViewModel,
-    private val categoria: String?,
-    private val subcategoria: String?
+    private val carritoDao: CarritoDao,
+    private val categoriaSeleccionada: CategoriaProducto?,
+    private val subcategoriaSeleccionada: String
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(ProductosViewModel::class.java)) {
-            val categoriaEnum = try {
-                categoria?.let { CategoriaProducto.valueOf(it.uppercase()) }
-            } catch (e: IllegalArgumentException) { null }
-
             @Suppress("UNCHECKED_CAST")
-            return ProductosViewModel(
-                carritoViewModel,
-                categoriaEnum,
-                subcategoria ?: ""
-            ) as T
+            return ProductosViewModel(carritoDao, categoriaSeleccionada, subcategoriaSeleccionada) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }
