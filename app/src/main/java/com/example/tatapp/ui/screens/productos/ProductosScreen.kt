@@ -18,7 +18,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -27,38 +26,30 @@ import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProductosScreen(navController: NavHostController, viewModel: ProductosViewModel) {
-
-    var expanded by remember { mutableStateOf(false) }  //del dropdown
-
+fun ProductosScreen(
+    navController: NavHostController,
+    viewModel: ProductosViewModel
+) {
+    val productosFiltrados = viewModel.productosFiltrados
 
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
                 title = { Text("Productos", fontSize = 30.sp) },
-
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = "Volver")
                     }
-                },
-                /*
-                actions = {
-                    IconButton(onClick = { /* Ir al perfil */ }) {
-                        Icon(Icons.Outlined.AccountCircle, contentDescription = "Perfil")
-                    }
                 }
-                */    //para despues
             )
         },
         bottomBar = {
             NavigationBar {
-
                 NavigationBarItem(
                     icon = { Icon(Icons.Rounded.Menu, contentDescription = "Productos") },
                     label = { Text("Productos", fontSize = 18.sp) },
                     selected = true,
-                    onClick = { /* Ya estás aquí */ }
+                    onClick = { }
                 )
 
                 NavigationBarItem(
@@ -80,56 +71,15 @@ fun ProductosScreen(navController: NavHostController, viewModel: ProductosViewMo
             }
         }
     ) { innerPadding ->
-        Column(modifier = Modifier.padding(innerPadding).padding(8.dp)) {
-
-            // categorias de productos
-            ExposedDropdownMenuBox(
-                expanded = expanded,
-                onExpandedChange = { expanded = !expanded },
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                TextField(
-                    value = viewModel.selectedCategoriaText,
-                    onValueChange = {},
-                    readOnly = true,
-                    label = { Text("Filtrar por categoría") },
-                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                    colors = ExposedDropdownMenuDefaults.textFieldColors(),
-                    modifier = Modifier.fillMaxWidth()
-                        .menuAnchor(MenuAnchorType.PrimaryNotEditable, true)
-                )
-
-                ExposedDropdownMenu(
-                    expanded = expanded,
-                    onDismissRequest = { expanded = false }
-                ) {
-                    DropdownMenuItem(
-                        text = { Text("Todo") },
-                        onClick = {
-                            viewModel.seleccionarCategoria(null)
-                            expanded = false
-                        }
-                    )
-                    CategoriaProducto.entries.forEach { cat ->
-                        DropdownMenuItem(
-                            text = { Text(cat.displayName) },
-                            onClick = {
-                                viewModel.seleccionarCategoria(cat)
-                                expanded = false
-                            }
-                        )
-                    }
-                }
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                items(viewModel.productosFiltrados) { producto ->
-                    ProductoItemRow(producto, viewModel)
-                }
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .padding(8.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            items(productosFiltrados) { producto ->
+                ProductoItemRow(producto, viewModel)
             }
         }
     }
@@ -160,7 +110,6 @@ fun ProductoItemRow(producto: ClaseProductos, viewModel: ProductosViewModel) {
                     contentScale = ContentScale.Crop
                 )
 
-                // Texto en esquina superior izquierda con fondo semitransparente
                 Text(
                     text = producto.nombre,
                     fontSize = 22.sp,
@@ -172,7 +121,6 @@ fun ProductoItemRow(producto: ClaseProductos, viewModel: ProductosViewModel) {
                         .padding(horizontal = 6.dp, vertical = 2.dp)
                 )
 
-                // Texto en esquina inferior derecha con fondo semitransparente
                 Text(
                     text = "\$${NumberFormat.getNumberInstance(Locale.forLanguageTag("es-CL")).format(producto.precio)}",
                     fontSize = 27.sp,
@@ -185,30 +133,27 @@ fun ProductoItemRow(producto: ClaseProductos, viewModel: ProductosViewModel) {
                 )
             }
 
-            Row (
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(100.dp)
                     .padding(16.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
-
-            ){
-
+            ) {
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(16.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Button(
                         onClick = { if (cantidad > 1) cantidad-- },
-                        modifier =Modifier.size(50.dp)
-                    ) { Text("-", textAlign = TextAlign.Center, fontSize = 20.sp) }
-                    Text(
-                        "$cantidad", fontSize = 30.sp)
+                        modifier = Modifier.size(50.dp)
+                    ) { Text("-", fontSize = 20.sp) }
+                    Text("$cantidad", fontSize = 30.sp)
                     Button(
                         onClick = { cantidad++ },
-                        modifier =Modifier.size(50.dp)
-                    ) { Text("+", textAlign = TextAlign.Center, fontSize = 20.sp) }
+                        modifier = Modifier.size(50.dp)
+                    ) { Text("+", fontSize = 20.sp) }
                 }
 
                 Button(
@@ -218,15 +163,7 @@ fun ProductoItemRow(producto: ClaseProductos, viewModel: ProductosViewModel) {
                 ) {
                     Text("Agregar", fontSize = 24.sp)
                 }
-
-
-
             }
-
         }
-
-
-
-
     }
 }

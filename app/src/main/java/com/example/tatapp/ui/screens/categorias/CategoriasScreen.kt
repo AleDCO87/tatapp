@@ -256,14 +256,7 @@ fun CategoriasScreen(navController: NavHostController) {
                             fontSize = 17.sp)
                     }
                 }
-
-
-
-
             }
-
-
-
         }
     }
 }

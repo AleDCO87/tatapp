@@ -6,25 +6,27 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.tatapp.ui.screens.carrito.CarritoScreen
 import com.example.tatapp.ui.screens.carrito.CarritoViewModel
 import com.example.tatapp.ui.screens.categorias.CategoriasScreen
 import com.example.tatapp.ui.screens.formRegistro.FormRegistro
 import com.example.tatapp.ui.screens.home.Home
+import com.example.tatapp.ui.screens.homeProductos.HomeProductosScreen
 import com.example.tatapp.ui.screens.productos.ProductosScreen
 import com.example.tatapp.ui.screens.productos.ProductosViewModel
 import com.example.tatapp.ui.screens.productos.ProductosViewModelFactory
+import com.example.tatapp.ui.screens.subcategorias.SubCategoriasScreen
 import com.example.tatapp.ui.theme.TatappTheme
 
 class MainActivity : ComponentActivity() {
 
     private val carritoViewModel: CarritoViewModel by viewModels()
-    private val productosViewModel: ProductosViewModel by viewModels {  //necesita una dependencia para funcionar
-        ProductosViewModelFactory(carritoViewModel)    //esto porque productos usa la lista global mutable del carrito
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashScreen = installSplashScreen()
@@ -38,20 +40,47 @@ class MainActivity : ComponentActivity() {
                 NavHost(navController = navController, startDestination = "home") {
 
                     composable("home") {
-                        Home(navController = navController)
+                        Home(navController)
                     }
 
                     composable("registro") {
                         FormRegistro(navController)
                     }
 
+                    composable("homeProductosScreen") {
+                        HomeProductosScreen(navController = navController)
+                    }
+
+                    composable(
+                        "subcategorias/{categoria}",
+                        arguments = listOf(navArgument("categoria") { type = NavType.StringType })
+                    ) { backStackEntry ->
+                        val categoria = backStackEntry.arguments?.getString("categoria") ?: ""
+                        SubCategoriasScreen(navController = navController, categoria = categoria)
+                    }
+
                     composable("categorias") {
                         CategoriasScreen(navController = navController)
                     }
 
-                    composable("productos") {
-                            backStackEntry ->
-                        ProductosScreen(navController = navController, viewModel = productosViewModel)
+                    composable(
+                        "productos/{categoria}/{subcategoria}",
+                        arguments = listOf(
+                            navArgument("categoria") { type = NavType.StringType },
+                            navArgument("subcategoria") { type = NavType.StringType }
+                        )
+                    ) { backStackEntry ->
+                        val categoria = backStackEntry.arguments?.getString("categoria")
+                        val subcategoria = backStackEntry.arguments?.getString("subcategoria")
+
+                        val viewModel: ProductosViewModel = viewModel(
+                            factory = ProductosViewModelFactory(carritoViewModel, categoria, subcategoria)
+                        )
+
+                        ProductosScreen(
+                            navController = navController,
+                            viewModel = viewModel
+                        )
                     }
 
                     composable("carrito") {

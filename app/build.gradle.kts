@@ -56,6 +56,7 @@ dependencies {
     implementation(libs.material3)
     implementation(libs.androidx.foundation)
     implementation(libs.androidx.splashscreen)
+    implementation(libs.androidx.ui.text)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

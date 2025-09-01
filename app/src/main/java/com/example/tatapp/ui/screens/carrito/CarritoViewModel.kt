@@ -8,6 +8,10 @@ class CarritoViewModel : ViewModel() {
 
     val carrito = mutableStateListOf<ClaseCarrito>()
 
+    // Última categoría y subcategoría agregadas
+    var ultimaCategoria: String? = null
+    var ultimaSubcategoria: String? = null
+
     val totalEnCarrito: Int
         get() = carrito.sumOf { it.cantidad }
 
@@ -15,6 +19,10 @@ class CarritoViewModel : ViewModel() {
         get() = carrito.sumOf { it.producto.precio * it.cantidad }
 
     fun agregarProducto(producto: ClaseProductos, cantidad: Int = 1) {
+        // Guardamos categoría y subcategoría
+        ultimaCategoria = producto.categoria.name
+        ultimaSubcategoria = producto.subcategoria
+
         val existente = carrito.find { it.producto == producto }
         if (existente != null) {
             existente.cantidad += cantidad
