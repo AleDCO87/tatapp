@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.ViewModelProvider
 import androidx.room.Room
 import androidx.navigation.NavType
@@ -27,8 +28,11 @@ class MainActivity : ComponentActivity() {
     private lateinit var carritoViewModel: CarritoViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        val splashScreen = installSplashScreen()
+        splashScreen.setKeepOnScreenCondition { false }
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
 
         // Crear DB y ViewModel con Factory
         val db = Room.databaseBuilder(applicationContext, AppDatabase::class.java, "app_db").build()
