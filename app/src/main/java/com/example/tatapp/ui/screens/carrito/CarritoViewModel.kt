@@ -1,49 +1,60 @@
 package com.example.tatapp.ui.screens.carrito
 
-import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
-import com.example.tatapp.ui.screens.productos.ClaseProductos
+import androidx.lifecycle.viewModelScope
+import com.example.tatapp.modelo.dao.CarritoDao
+import com.example.tatapp.modelo.entity.CarritoEntity
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 
-class CarritoViewModel : ViewModel() {
+class CarritoViewModel(private val dao: CarritoDao) : ViewModel() {
 
-    val carrito = mutableStateListOf<ClaseCarrito>()
-
-    // Última categoría y subcategoría agregadas
-    var ultimaCategoria: String? = null
-    var ultimaSubcategoria: String? = null
+    private val _carrito = MutableStateFlow<List<CarritoEntity>>(emptyList())
+    val carrito: StateFlow<List<CarritoEntity>> = _carrito.asStateFlow()
 
     val totalEnCarrito: Int
-        get() = carrito.sumOf { it.cantidad }
+        get() = _carrito.value.sumOf { it.cantidad }
 
     val totalPrecio: Int
-        get() = carrito.sumOf { it.producto.precio * it.cantidad }
+        get() = _carrito.value.sumOf { it.precio * it.cantidad }
 
-    fun agregarProducto(producto: ClaseProductos, cantidad: Int = 1) {
-        // Guardamos categoría y subcategoría
-        ultimaCategoria = producto.categoria.name
-        ultimaSubcategoria = producto.subcategoria
+    init {
+        cargarCarrito()
+    }
 
-        val existente = carrito.find { it.producto == producto }
-        if (existente != null) {
-            existente.cantidad += cantidad
-        } else {
-            carrito.add(ClaseCarrito(producto, cantidad))
+    private fun cargarCarrito() {
+        viewModelScope.launch {
+            dao.obtenerCarrito().collect { _carrito.value = it }
         }
     }
 
-    fun aumentarCantidad(item: ClaseCarrito) {
-        item.cantidad++
-    }
-
-    fun disminuirCantidad(item: ClaseCarrito) {
-        if (item.cantidad > 1) {
-            item.cantidad--
-        } else {
-            eliminarProducto(item)
+    fun aumentarCantidad(producto: CarritoEntity) {
+        viewModelScope.launch {
+            dao.actualizarProducto(producto.copy(cantidad = producto.cantidad + 1))
         }
     }
 
-    fun eliminarProducto(item: ClaseCarrito) {
-        carrito.remove(item)
+    fun disminuirCantidad(producto: CarritoEntity) {
+        viewModelScope.launch {
+            if (producto.cantidad > 1) {
+                dao.actualizarProducto(producto.copy(cantidad = producto.cantidad - 1))
+            } else {
+                dao.eliminarProducto(producto)
+            }
+        }
+    }
+
+    fun eliminarProducto(producto: CarritoEntity) {
+        viewModelScope.launch {
+            dao.eliminarProducto(producto)
+        }
+    }
+
+    fun vaciarCarrito() {
+        viewModelScope.launch {
+            dao.vaciarCarrito()
+        }
     }
 }

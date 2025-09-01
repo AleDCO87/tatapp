@@ -8,11 +8,12 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.material.icons.rounded.ShoppingCart
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -20,12 +21,15 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.tatapp.modelo.entity.CarritoEntity
 import java.text.NumberFormat
 import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CarritoScreen(navController: NavHostController, viewModel: CarritoViewModel) {
+    val carrito by viewModel.carrito.collectAsState()
+
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -38,9 +42,7 @@ fun CarritoScreen(navController: NavHostController, viewModel: CarritoViewModel)
                     icon = { Icon(Icons.Rounded.Menu, contentDescription = "Productos") },
                     label = { Text("Productos", fontSize = 18.sp) },
                     selected = false,
-                    onClick = {
-                        navController.popBackStack()
-                    }
+                    onClick = { navController.popBackStack() }
                 )
 
                 NavigationBarItem(
@@ -67,7 +69,7 @@ fun CarritoScreen(navController: NavHostController, viewModel: CarritoViewModel)
                 .padding(innerPadding)
                 .padding(8.dp)
         ) {
-            if (viewModel.carrito.isEmpty()) {
+            if (carrito.isEmpty()) {
                 Text(
                     "El carrito está vacío",
                     fontSize = 20.sp,
@@ -78,7 +80,7 @@ fun CarritoScreen(navController: NavHostController, viewModel: CarritoViewModel)
                     verticalArrangement = Arrangement.spacedBy(16.dp),
                     modifier = Modifier.weight(1f)
                 ) {
-                    items(viewModel.carrito) { item ->
+                    items(carrito) { item ->
                         CarritoItemRow(item, viewModel)
                     }
                 }
@@ -104,7 +106,7 @@ fun CarritoScreen(navController: NavHostController, viewModel: CarritoViewModel)
 }
 
 @Composable
-fun CarritoItemRow(item: ClaseCarrito, viewModel: CarritoViewModel) {
+fun CarritoItemRow(item: CarritoEntity, viewModel: CarritoViewModel) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(12.dp),
@@ -118,8 +120,8 @@ fun CarritoItemRow(item: ClaseCarrito, viewModel: CarritoViewModel) {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Image(
-                painter = painterResource(id = item.producto.imagenRes),
-                contentDescription = item.producto.nombre,
+                painter = painterResource(id = item.imagenRes),
+                contentDescription = item.nombre,
                 modifier = Modifier.size(70.dp)
             )
 
@@ -129,7 +131,7 @@ fun CarritoItemRow(item: ClaseCarrito, viewModel: CarritoViewModel) {
                     .padding(start = 8.dp),
                 verticalArrangement = Arrangement.Center
             ) {
-                Text(item.producto.nombre, fontSize = 22.sp, color = Color.Black)
+                Text(item.nombre, fontSize = 22.sp, color = Color.Black)
                 Spacer(modifier = Modifier.height(4.dp))
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     FilledIconButton(
@@ -146,7 +148,7 @@ fun CarritoItemRow(item: ClaseCarrito, viewModel: CarritoViewModel) {
                 }
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    "Subtotal: \$${NumberFormat.getNumberInstance(Locale.forLanguageTag("es-CL")).format(item.producto.precio * item.cantidad)}",
+                    "Subtotal: \$${NumberFormat.getNumberInstance(Locale.forLanguageTag("es-CL")).format(item.precio * item.cantidad)}",
                     fontSize = 18.sp,
                     color = Color.Black
                 )
