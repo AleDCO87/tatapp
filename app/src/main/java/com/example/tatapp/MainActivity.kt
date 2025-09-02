@@ -38,7 +38,10 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             // SettingsViewModel desde Compose (más simple)
-            val settingsVm: SettingsViewModel = viewModel(factory = SettingsViewModelFactory(application))
+            val settingsVm: SettingsViewModel =
+                androidx.lifecycle.viewmodel.compose.viewModel(
+                    factory = SettingsViewModelFactory(application)
+                )
 
             TatappTheme(darkTheme = settingsVm.darkMode.value, dynamicColor = false) {
                 val navController = rememberNavController()
