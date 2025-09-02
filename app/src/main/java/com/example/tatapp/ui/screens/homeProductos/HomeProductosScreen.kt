@@ -46,7 +46,7 @@ fun HomeProductosScreen(
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text("TatApp", fontSize = 30.sp) },
+                title = { Text(" ", fontSize = 30.sp) },
                 navigationIcon = {
                     IconButton(onClick = { navController.navigate("home") }) {
                         Icon(Icons.Filled.AccountCircle, contentDescription = "Perfil")

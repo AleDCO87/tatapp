@@ -4,6 +4,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -43,7 +45,9 @@ class MainActivity : ComponentActivity() {
                     factory = SettingsViewModelFactory(application)
                 )
 
-            TatappTheme(darkTheme = settingsVm.darkMode.value, dynamicColor = false) {
+            val isDark by settingsVm.darkMode.collectAsState()
+
+            TatappTheme(darkTheme = isDark, dynamicColor = false) {
                 val navController = rememberNavController()
 
                 NavHost(navController = navController, startDestination = "homeProductosScreen") {
