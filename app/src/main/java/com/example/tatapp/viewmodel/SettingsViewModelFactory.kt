@@ -7,11 +7,13 @@ import com.example.tatapp.data.prefs.SettingsRepository
 
 class SettingsViewModelFactory(context: Context) : ViewModelProvider.Factory {
     private val repo = SettingsRepository(context)
+
+    @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(SettingsViewModel::class.java)) {
-            @Suppress("UNCHECKED_CAST")
             return SettingsViewModel(repo) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }
 }
+
