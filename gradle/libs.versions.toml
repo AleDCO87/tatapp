@@ -1,5 +1,5 @@
 [versions]
-agp = "8.12.2"
+agp = "8.13.0"
 kotlin = "2.2.10"
 coreKtx = "1.17.0"
 junit = "4.13.2"
@@ -18,6 +18,7 @@ splashscreen = "1.0.1"
 uiText = "1.9.0"
 room = "2.7.2"
 ksp = "2.2.10-2.0.2"
+runtime = "1.9.0"
 
 
 [libraries]
@@ -46,6 +47,7 @@ androidx-ui-text = { group = "androidx.compose.ui", name = "ui-text", version.re
 room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
 room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
+androidx-compose-runtime = { group = "androidx.compose.runtime", name = "runtime", version.ref = "runtime" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

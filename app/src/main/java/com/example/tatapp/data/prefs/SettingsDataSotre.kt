@@ -1,6 +1,5 @@
 package com.example.tatapp.data.prefs
 
-package com.example.tatapp.data.prefs
 
 import android.content.Context
 import androidx.datastore.preferences.core.booleanPreferencesKey
