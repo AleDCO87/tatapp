@@ -46,22 +46,19 @@ fun HomeProductosScreen(
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text(" ", fontSize = 30.sp) },
+                title = { Text("Tatapp", fontSize = 30.sp) },
                 navigationIcon = {
-                    IconButton(onClick = { navController.navigate("home") }) {
-                        Icon(Icons.Filled.AccountCircle, contentDescription = "Perfil")
-                    }
+                    TopBarOverflowMenu(
+                        isDark = dark,
+                        onToggleDark = { settingsVm.toggleDark() },
+                        onOpenPerfil = { navController.navigate("home") },
+                        onOpenConfig = { /* navController.navigate("config") para cuando creemos esa pantalla */ }
+                    )
                 },
                 actions = {
                     IconButton(onClick = { navController.navigate("carrito") }) {
                         Icon(Icons.Filled.ShoppingCart, contentDescription = "Carrito")
                     }
-                    TopBarOverflowMenu(
-                        isDark = dark,
-                        onToggleDark = { settingsVm.toggleDark() },
-                        onOpenPerfil = { navController.navigate("home") },
-                        onOpenConfig = { /* navController.navigate("config") si tienes esa pantalla */ }
-                    )
                 }
             )
         },
