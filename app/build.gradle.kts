@@ -59,6 +59,7 @@ dependencies {
     implementation(libs.androidx.foundation)
     implementation(libs.androidx.splashscreen)
     implementation(libs.androidx.ui.text)
+    implementation(libs.androidx.compose.runtime)
 
 
     testImplementation(libs.junit)
